@@ -4,11 +4,14 @@ import com.hxy.mapper.StudentMapper;
 import com.hxy.pojo.Student;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 /**
+ * mybatis 结合spring
  * Created by hxy-pc on 2016/7/31.
+ *
  */
 public class SpringMybatis {
     private static ApplicationContext  applicationContext = null;
@@ -21,6 +24,7 @@ public class SpringMybatis {
         new SpringMybatis().foo();
     }
 
+    @Transactional
     public void foo() {
 //        StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);
 
@@ -32,5 +36,6 @@ public class SpringMybatis {
         student.setName("okok");
 
         mapper.insertStudent(student);
+        throw new RuntimeException();
     }
 }

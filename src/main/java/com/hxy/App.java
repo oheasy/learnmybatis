@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 /**
- * Hello world!
+ * 只是用mybatis
  *
  */
 public class App 
