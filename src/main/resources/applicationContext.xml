@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://mybatis.org/schema/mybatis-spring
+                        http://mybatis.org/schema/mybatis-spring.xsd">
+
+    <context:component-scan base-package="com.hxy" />
+    <!--引入properties文件-->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:jdbc.properties" />
+    </bean>
+
+    <!--初始化datasource-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${driver}" />
+        <property name="url" value="${url}" />
+        <property name="username" value="${username}" />
+        <property name="password" value="${password}" />
+    </bean>
+
+    <!-- 代替mybatis-config.xml来初始化一个sqlSessinoFactoryd-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath:com/hxy/mapper/*.xml"/>
+        <property name="typeAliasesPackage" value="com.hxy.pojo"/>
+        <!--
+         <property name="configLocation" value="mybatis-config.xml"/>
+        -->
+    </bean>
+
+
+    <!--使用sqlsession -->
+    <!---
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+     -->
+
+    <!-- 获取sqlsession比较麻烦，现在不用获取sqlsession,直接得到mapper实例-->
+    <!--
+   <bean id="studentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+       <property name="mapperInterface" value="com.hxy.mapper.StudentMapper"/>
+       <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+   </bean>
+    -->
+
+    <!-- 向上面那样一个一个实例mapper比较麻烦，可以使用scan来批量实例-->
+    <!--
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hxy.mapper"/>
+    </bean>
+    -->
+
+    <!-- 跟上面功能一样，是mybatis-spring 新的接口 -->
+    <mybatis:scan base-package="com.hxy.mapper"/>
+
+</beans>
